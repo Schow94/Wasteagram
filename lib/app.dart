@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(brightness: Brightness.dark),
       themeMode: ThemeMode.dark,
       routes: {
-        '/': (context) => ListScreen(),
+        '/': (context) => const ListScreen(),
         'newPost': (context) => const NewPostScreen(),
-        'details': (context) => DetailsScreen(),
+        'details': (context) => const DetailsScreen(),
       },
     );
   }

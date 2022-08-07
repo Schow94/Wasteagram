@@ -22,7 +22,7 @@ class ListItem extends StatelessWidget {
           child: Card(
             child: ListTile(
               title: Text(
-                DateFormat('yyyy-MM-dd').format(
+                DateFormat('EEEE, MMMM d, yyyy').format(
                   post['date'].toDate(),
                 ),
               ),
