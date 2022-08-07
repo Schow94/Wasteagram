@@ -3,19 +3,17 @@
 */
 
 class Entry {
-  final String image;
+  final String imageURL;
   DateTime date = DateTime.now();
   final double? latitude;
-  final double? longtitude;
-  final int items;
+  final double? longitude;
+  final int quantity;
 
   Entry({
-    required this.image,
+    required this.imageURL,
     required this.date,
     required this.latitude,
-    required this.longtitude,
-    required this.items,
+    required this.longitude,
+    required this.quantity,
   });
 }
-
-// 37.71688714797971, -122.46683295141479

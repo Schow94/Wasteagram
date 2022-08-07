@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
+
 import '../models/new_post_screen_arg.dart';
 import '../db/entry_dto.dart';
-// import '../models/entry.dart';
+import '../widgets/new_entry_form.dart';
+import '../widgets/upload_button.dart';
 
 class NewPostScreen extends StatefulWidget {
   const NewPostScreen({Key? key}) : super(key: key);
@@ -17,25 +17,31 @@ class NewPostScreen extends StatefulWidget {
 }
 
 class _NewPostScreenState extends State<NewPostScreen> {
-  final formKey = GlobalKey<FormState>();
+  static final formKey = GlobalKey<FormState>();
   final newEntry = EntryDTO();
 
-  File? image;
+  File? imageURL;
   final picker = ImagePicker();
 
   // Get image
   void getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    image = File(pickedFile!.path);
+    var pickedFile;
 
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child(Path.basename(image!.path));
-    UploadTask uploadTask = storageReference.putFile(image!);
+    pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    imageURL = File(pickedFile!.path);
+
+    // Assign unique name to each image
+    String filename = DateTime.now().toString() + imageURL.toString();
+
+    Reference storageReference = FirebaseStorage.instance.ref().child(filename);
+    UploadTask uploadTask = storageReference.putFile(imageURL!);
     // Wait for onComplete to resolve
     await uploadTask;
     final url = await storageReference.getDownloadURL();
-    print(url);
-    newEntry.image = url;
+
+    newEntry.imageURL = url;
+
     setState(() {});
   }
 
@@ -50,102 +56,33 @@ class _NewPostScreenState extends State<NewPostScreen> {
         ModalRoute.of(context)?.settings.arguments as NewPostScreenArguments;
     final void Function(EntryDTO) newPost = screenargs.newPost;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wasteagram'),
-      ),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: [
-              ImageWidget(image: image),
-              // Image.file(image!),
-              Form(
-                key: formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(40),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: const InputDecoration(
-                          labelText: 'Number of Wasted Items',
-                          border: UnderlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          // Save value in state
-                          newEntry.items = int.parse(value!);
-                          // newEntry.image = image!;
-
-                          // print(newEntry.items);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter a number';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Wasteagram'),
+        ),
+        body: Container(
+          child: Center(
+            child: Column(
+              children: [
+                NewEntryForm(
+                  formKey: formKey,
+                  newEntry: newEntry,
+                  imageURL: imageURL,
                 ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          // Stores textfields values in DTO
-                          formKey.currentState!.save();
-                          newPost(newEntry);
-                          goToListScreen(context);
-                        }
-                      },
-                      child: const Icon(
-                        Icons.cloud_upload,
-                        size: 70,
-                      ),
-                    ),
-                  ),
+                UploadButton(
+                  formKey: formKey,
+                  newPost: newPost,
+                  newEntry: newEntry,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
-  }
-}
-
-/*
-    Navigate to AddEntry Screen
-  */
-void goToListScreen(BuildContext context) {
-  Navigator.of(context).pop('');
-}
-
-class ImageWidget extends StatelessWidget {
-  final File? image;
-
-  const ImageWidget({Key? key, required this.image}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (image == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return Image.file(image!);
-    }
   }
 }

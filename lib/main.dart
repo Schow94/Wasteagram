@@ -2,7 +2,7 @@
   Student: Stephen Chow
   Email: chowst@oregonstate.edu
   Project: 5 - Wasteagram
-  Last Updated: 8/5/22
+  Last Updated: 8/8/22
 */
 
 import 'package:flutter/material.dart';

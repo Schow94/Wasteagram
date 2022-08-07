@@ -13,8 +13,6 @@ class DetailsScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as DetailsScreenArguments;
     final Entry entry = screenargs.entry;
 
-    print(entry.longtitude);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Wasteagram'),
@@ -30,12 +28,12 @@ class DetailsScreen extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               child: Image.network(
-                entry.image,
+                entry.imageURL,
                 fit: BoxFit.cover,
               ),
             ),
             Text(
-              "${entry.items} items",
+              "${entry.quantity} items",
               style: Theme.of(context).textTheme.headline4,
             ),
             Text(
