@@ -1,3 +1,6 @@
+/*
+  - Unit test to test Entry class
+*/
 import 'package:test/test.dart';
 
 import '../models/entry.dart';

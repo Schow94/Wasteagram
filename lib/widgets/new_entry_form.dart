@@ -6,11 +6,11 @@ import 'package:flutter/services.dart';
 import '../db/entry_dto.dart';
 
 class NewEntryForm extends StatelessWidget {
-  GlobalKey<FormState> formKey;
+  final GlobalKey<FormState> formKey;
   final File? imageURL;
-  EntryDTO newEntry;
+  final EntryDTO newEntry;
 
-  NewEntryForm(
+  const NewEntryForm(
       {Key? key, required this.newEntry, required this.formKey, this.imageURL})
       : super(key: key);
 

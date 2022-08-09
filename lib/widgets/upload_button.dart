@@ -31,7 +31,9 @@ class UploadButton extends StatelessWidget {
                 if (formKey.currentState!.validate()) {
                   // Stores textfields values in DTO
                   formKey.currentState!.save();
+                  // Add new post to db
                   newPost(newEntry);
+                  // Navigate to ListScreen after adding entry
                   goToListScreen(context);
                 }
               },

@@ -1,3 +1,6 @@
+/*
+  - Unit test to test DetailsScreenArguments class
+*/
 import 'package:test/test.dart';
 
 import '../models/entry.dart';

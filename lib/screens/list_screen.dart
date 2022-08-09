@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -17,8 +16,10 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   LocationData? locationData;
+  // Initialize Location
   var locationService = Location();
 
+  // Initialize state
   void initState() {
     super.initState();
     retrieveLocation();
@@ -32,10 +33,8 @@ class _ListScreenState extends State<ListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          goToNewPostScreen(
-            context,
-            NewPostScreenArguments(newPost: newPost),
-          );
+          // Navigate to New Post Screen
+          goToNewPostScreen(context, NewPostScreenArguments(newPost: newPost));
         },
         backgroundColor: const Color.fromARGB(255, 18, 214, 194),
         child: const Icon(Icons.camera_alt),
@@ -51,7 +50,7 @@ class _ListScreenState extends State<ListScreen> {
   }
 
 /*
-  - Add entry to Firestore db
+  - Add waste entry to Firestore db
 */
   void newPost(EntryDTO newEntry) {
     FirebaseFirestore.instance.collection('entries').add({

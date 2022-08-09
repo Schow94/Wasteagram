@@ -1,5 +1,5 @@
 /*
-  - Waste Entry
+  - Waste Entry class
 */
 
 class Entry {
